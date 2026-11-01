@@ -1,4 +1,6 @@
-﻿namespace Counter4E1
+﻿using Counter4E1.Views;
+
+namespace Counter4E1
 {
     public partial class App : Application
     {

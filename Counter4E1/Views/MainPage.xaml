@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Counter4E1.Views.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="20">
+
+            <Label
+                Text="Początkowy licznik"
+                FontSize="24"
+                Margin="20"
+                HorizontalOptions="Center"/>
+
+            <Label x:Name="counterLabel"
+                   FontSize="38"
+                   HorizontalOptions="Center"
+                   Text="0"/>
+
+            <HorizontalStackLayout
+                Spacing="20"
+                HorizontalOptions="Center">
+
+                <Button
+                    Text="-"
+                    SemanticProperties.Hint="Odejmuje liczby o 1 do licznika"
+                    Clicked="SubtractFromCounter"
+                    Margin="20"
+                    WidthRequest="70"
+                    FontSize="30"/>
+
+                <Button
+                    Text="+"
+                    SemanticProperties.Hint="Dodaje liczby o 1 do licznika"
+                    Clicked="AddToCounter"
+                    Margin="20"
+                    WidthRequest="70"
+                    FontSize="30"/>
+
+            </HorizontalStackLayout>
+
+            <VerticalStackLayout
+                x:Name="newCounters"
+                Spacing="20"/>
+
+            <Editor
+                x:Name="newCounterName"
+                Placeholder="Podaj nazwę licznika"
+                HeightRequest="30"/>
+
+            <Editor
+                x:Name="newCounterValue"
+                Placeholder="Podaj wartość początkową licznika"
+                HeightRequest="30"/>
+
+            <Button
+                Text="Dodaj licznik"
+                Clicked="AddNewCounter"
+                Margin="0,0,0,10"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
