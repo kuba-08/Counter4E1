@@ -28,5 +28,5 @@ public class Counter : INotifyPropertyChanged
         Value = value;
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 }
