@@ -1,20 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.ComponentModel;
 
-namespace Counter4E1.Models
+namespace Counter4E1.Models;
+
+public class Counter : INotifyPropertyChanged
 {
-    public class Counter
-    {
-        public string Name { get; set; }
-        public int Value { get; set; }
+    private int value;
 
-        public Counter(string name, int value)
+    public string Name { get; set; }
+
+    public int Value
+    {
+        get
         {
-            Name = name;
-            Value = value;
+            return value;
+        }
+        set
+        {
+            this.value = value;
+            PropertyChanged?.Invoke(this,
+                new PropertyChangedEventArgs("Value"));
         }
     }
+
+    public Counter(string name, int value)
+    {
+        Name = name;
+        Value = value;
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
 }

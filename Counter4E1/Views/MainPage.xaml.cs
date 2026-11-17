@@ -1,20 +1,24 @@
-﻿using Counter4E1.Models;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using Counter4E1.Models;
 
-namespace Counter4E1.Views
-{
+namespace Counter4E1.Views;
+
     public partial class MainPage : ContentPage
     {
-        int counterValue = 0;
+        private int counterValue = 0;
 
         string filePath = Path.Combine(
             FileSystem.AppDataDirectory,
             "liczniki.txt");
 
+    public ObservableCollection<Counter> Counters { get; } = new ObservableCollection<Counter>();
         public MainPage()
         {
             InitializeComponent();
+            BindingContext = this;
             Load();
-        }
+    }
 
         private void AddToCounter(object sender, EventArgs e)
         {
@@ -58,99 +62,39 @@ namespace Counter4E1.Views
 
         private void AddCounter(Counter counter)
         {
-            Label nameLabel = new Label
-            {
-                Text = counter.Name,
-                FontSize = 24,
-                HorizontalOptions = LayoutOptions.Center
-            };
-
-            Label valueLabel = new Label
-            {
-                Text = counter.Value.ToString(),
-                FontSize = 38,
-                HorizontalOptions = LayoutOptions.Center
-            };
-
-            Button plusButton = new Button
-            {
-                Text = "+",
-                WidthRequest = 70,
-                Margin = 20,
-                FontSize = 30
-            };
-
-            Button minusButton = new Button
-            {
-                Text = "-",
-                WidthRequest = 70,
-                Margin = 20,
-                FontSize = 30
-            };
-
-            plusButton.Clicked += (s, e) =>
-            {
-                counter.Value++;
-                valueLabel.Text = counter.Value.ToString();
-                Save();
-            };
-
-            minusButton.Clicked += (s, e) =>
-            {
-                counter.Value--;
-                valueLabel.Text = counter.Value.ToString();
-                Save();
-            };
-
-            HorizontalStackLayout buttons = new HorizontalStackLayout
-            {
-                HorizontalOptions = LayoutOptions.Center,
-                Spacing = 20
-            };
-
-            buttons.Children.Add(minusButton);
-            buttons.Children.Add(plusButton);
-
-            VerticalStackLayout counterLayout = new VerticalStackLayout
-            {
-                Spacing = 10
-            };
-
-            counterLayout.Children.Add(nameLabel);
-            counterLayout.Children.Add(valueLabel);
-            counterLayout.Children.Add(buttons);
-
-            newCounters.Children.Add(counterLayout);
+        counter.PropertyChanged += Counter_PropertyChanged;
+        Counters.Add(counter);
         }
+    private void Counter_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Counter.Value))
+        {
+            Save();
+        }
+    }
 
         private void Save()
         {
-            string text = "Początkowy licznik:" + counterValue;
+            List<string> lines = new List<string>();
+        lines.Add("Początkowy Licznik:" + counterValue);
 
-            foreach (var element in newCounters.Children)
-            {
-                if (element is VerticalStackLayout counterLayout)
-                {
-                    string name = ((Label)counterLayout.Children[0]).Text;
-                    string value = ((Label)counterLayout.Children[1]).Text;
-
-                    text += "\n" + name + ":" + value;
-                }
-            }
-
-            File.WriteAllText(filePath, text);
+        foreach (Counter counter in Counters)
+        {
+            lines.Add(counter.Name + ":" + counter.Value);
         }
+        File.WriteAllLines(filePath, lines);
+    }
 
         private void Load()
         {
             if (!File.Exists(filePath))
                 return;
 
-            string[] counters = File.ReadAllLines(filePath);
+            string[] countersLines = File.ReadAllLines(filePath);
 
-            foreach (string counterLine in counters)
+            foreach (string counterLine in countersLines)
             {
-                string[] data = counterLine.Split(':');
+                string[] data = counterLine.Split(':', 2);
 
                 if (data.Length != 2)
                     continue;
@@ -158,10 +102,11 @@ namespace Counter4E1.Views
                 if (!int.TryParse(data[1], out int value))
                     continue;
 
-                if (data[0] == "Początkowy licznik")
+                if (data[0].Equals("Początkowy licznik", StringComparison.OrdinalIgnoreCase))
                 {
                     counterValue = value;
                     counterLabel.Text = value.ToString();
+                continue;
                 }
                 else
                 {
@@ -171,4 +116,3 @@ namespace Counter4E1.Views
             }
         }
     }
-}

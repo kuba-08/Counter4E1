@@ -1,23 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:views="clr-namespace:Counter4E1.Views"
              x:Class="Counter4E1.Views.MainPage">
 
-    <ScrollView>
+    <Grid Padding="20" RowDefinitions="Auto,*">
+
+        
         <VerticalStackLayout
-            Padding="30,0"
-            Spacing="20">
+            Grid.Row="0"
+            Spacing="15">
 
             <Label
                 Text="Początkowy licznik"
                 FontSize="24"
-                Margin="20"
                 HorizontalOptions="Center"/>
 
-            <Label x:Name="counterLabel"
-                   FontSize="38"
-                   HorizontalOptions="Center"
-                   Text="0"/>
+            <Label
+                x:Name="counterLabel"
+                FontSize="38"
+                HorizontalOptions="Center"
+                Text="0"/>
 
             <HorizontalStackLayout
                 Spacing="20"
@@ -25,25 +28,22 @@
 
                 <Button
                     Text="-"
-                    SemanticProperties.Hint="Odejmuje liczby o 1 do licznika"
                     Clicked="SubtractFromCounter"
-                    Margin="20"
-                    WidthRequest="70"
-                    FontSize="30"/>
+                    FontSize="25"
+                    WidthRequest="70"/>
 
                 <Button
                     Text="+"
-                    SemanticProperties.Hint="Dodaje liczby o 1 do licznika"
                     Clicked="AddToCounter"
-                    Margin="20"
-                    WidthRequest="70"
-                    FontSize="30"/>
+                    FontSize="25"
+                    WidthRequest="70"/>
 
             </HorizontalStackLayout>
 
-            <VerticalStackLayout
-                x:Name="newCounters"
-                Spacing="20"/>
+            <BoxView
+                HeightRequest="1"
+                BackgroundColor="Gray"
+                Margin="0,10"/>
 
             <Editor
                 x:Name="newCounterName"
@@ -61,6 +61,21 @@
                 Margin="0,0,0,10"/>
 
         </VerticalStackLayout>
-    </ScrollView>
+
+        
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Counters}"
+            SelectionMode="None">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <views:CounterView/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
 
 </ContentPage>
